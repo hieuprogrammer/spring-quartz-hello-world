@@ -13,10 +13,12 @@ public class QuartzHelloWorldScheduler {
 
     @PostConstruct
     public void scheduleHelloWorldJob() throws SchedulerException {
-        JobDetail jobDetail = buildJobDetail();
-        Trigger trigger = buildTrigger();
+//        JobDetail jobDetail = buildJobDetail();
+//        Trigger trigger = buildTrigger();
+//        scheduler.scheduleJob(jobDetail, trigger);
 
-        scheduler.scheduleJob(jobDetail, trigger);
+        String cronExpression = "0/1 * * ? * * *";
+        scheduleJobWithCron(cronExpression);
     }
 
     public void scheduleJobWithCron(String cronExpression) throws SchedulerException {
@@ -26,16 +28,16 @@ public class QuartzHelloWorldScheduler {
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
+    private static JobDetail buildCronJobDetail() {
+        return JobBuilder.newJob(HelloWorldJob.class)
+                .withIdentity("cronJob_" + System.currentTimeMillis(), "group1")
+                .build();
+    }
+
     private static Trigger buildCronJobTrigger(String cronExpression) {
         return TriggerBuilder.newTrigger()
                 .withIdentity("cronTrigger_" + System.currentTimeMillis(), "group1")
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-    }
-
-    private static JobDetail buildCronJobDetail() {
-        return JobBuilder.newJob(HelloWorldJob.class)
-                .withIdentity("cronJob_" + System.currentTimeMillis(), "group1")
                 .build();
     }
 

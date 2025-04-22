@@ -23,7 +23,7 @@ public class QuartzHelloWorldApi {
         return "Job scheduled with cron: " + cron;
     }
 
-    @PostMapping("/hello/schedule")
+    @PostMapping("/hello/schedule-job")
     public String scheduleCronJob(@RequestBody CronExpressionRequest request) throws SchedulerException {
         quartzHelloWorldScheduler.scheduleJobWithCron(request.getCronExpression());
         return "Job scheduled with cron expression: " + request.getCronExpression();
